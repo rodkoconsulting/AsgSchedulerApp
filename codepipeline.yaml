@@ -42,6 +42,9 @@ Parameters:
   TestingStackName:
     Type: String
     Default: "AsgSchedulerStack-Dev"
+  TestingEnvironment:
+    Type: String
+    Default: "DEV"
   TestingPipelineExecutionRole:
     Type: String
     Default: "arn:aws:iam::424371521123:role/aws-sam-cli-managed-prod-pipe-PipelineExecutionRole-ZhsYpsXeU52t"
@@ -63,6 +66,9 @@ Parameters:
   ProdStackName:
     Type: String
     Default: "AsgSchedulerStack-Prod"
+  ProdEnvironment:
+    Type: String
+    Default: "PROD"
   ProdPipelineExecutionRole:
     Type: String
     Default: "arn:aws:iam::424371521123:role/aws-sam-cli-managed-prod-pipe-PipelineExecutionRole-ZhsYpsXeU52t"
@@ -85,6 +91,10 @@ Parameters:
   FeatureGitBranch:
     Type: String
     Default: ""
+  ManualApprovalNotificationArn:
+    Type: String
+    Default: "arn:aws:sns:us-east-1:424371521123:CodePipelineApproval"
+
 
 Conditions:
   IsMainBranchPipeline: !Equals [!Ref FeatureGitBranch, ""]
