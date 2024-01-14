@@ -320,6 +320,17 @@ Resources:
                 Configuration:
                   NotificationArn: !Ref ManualApprovalNotificationArn
                 RunOrder: 1
+              - Name: DeleteTestStack
+                ActionTypeId:
+                  Category: Deploy
+                  Owner: AWS
+                  Provider: CloudFormation
+                  Version: "1"
+                Configuration:
+                  ActionMode: DELETE_ONLY
+                  StackName: !Sub ${TestingStackName}
+                  RoleArn: !GetAtt PipelineStackCloudFormationExecutionRole.Arn
+                RunOrder: 2
               - Name: DeployProd
                 ActionTypeId:
                   Category: Build
