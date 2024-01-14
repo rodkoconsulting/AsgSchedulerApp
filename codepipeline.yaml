@@ -337,7 +337,7 @@ Resources:
                   Owner: AWS
                   Provider: CodeBuild
                   Version: "1"
-                RunOrder: 2 # keeping run order as 2 in case manual approval is enabled
+                RunOrder: 3 # keeping run order as 2 in case manual approval is enabled
                 Configuration:
                   ProjectName: !Ref CodeBuildProjectDeploy
                   EnvironmentVariables: !Sub |
