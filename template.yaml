@@ -48,6 +48,32 @@ Resources:
                 Resource: '*'
       RoleName: !Sub AsgSchedulerFunctionRole_${Environment}
 
+  AsgSchedulerEventBridgeRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - scheduler.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: /
+      Policies:
+        - PolicyName: AsgSchedulerEventBridgePolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - lambda:InvokeFunction
+                Resource:
+                  - !Sub "arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:AsgSchedulerFunction_${Environment}:*"
+                  - !Sub "arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:AsgSchedulerFunction_${Environment}"
+      RoleName: !Sub AsgSchedulerEventBridgeRole_${Environment}
+
   AsgSchedulerFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -64,7 +90,7 @@ Resources:
           Properties:
             Name: !Sub AsgSchedulerStart_${Environment}
             Description: Daily schedule to invoke AsgSchedulerFunction for starting dev ASGs
-            RoleArn: !GetAtt AsgSchedulerFunctionRole.Arn
+            RoleArn: !GetAtt AsgSchedulerEventBridgeRole.Arn
             ScheduleExpression: "cron(0 8 ? * MON-FRI *)"
             ScheduleExpressionTimezone: "America/New_York"
             RetryPolicy:
@@ -75,7 +101,7 @@ Resources:
           Properties:
             Name: !Sub AsgSchedulerStop_${Environment}
             Description: Daily schedule to invoke AsgSchedulerFunction for stopping dev ASGs
-            RoleArn: !GetAtt AsgSchedulerFunctionRole.Arn
+            RoleArn: !GetAtt AsgSchedulerEventBridgeRole.Arn
             ScheduleExpression: "cron(0 18 ? * MON-FRI *)"
             ScheduleExpressionTimezone: "America/New_York"
             RetryPolicy:
