@@ -508,10 +508,10 @@ Resources:
                     - !GetAtt CodeBuildProjectBuildAndPackage.Arn
                     - !Ref AWS::NoValue
                   # Uncomment the following step for running the integration tests
-                  # - !If
-                  #   - IsMainBranchPipeline
-                  #   - !GetAtt CodeBuildProjectIntegrationTest.Arn
-                  #   - !Ref AWS::NoValue
+                  - !If
+                     - IsMainBranchPipeline
+                     - !GetAtt CodeBuildProjectIntegrationTest.Arn
+                     - !Ref AWS::NoValue
                   - !If
                     - IsMainBranchPipeline
                     - !GetAtt CodeBuildProjectDeploy.Arn
@@ -531,6 +531,7 @@ Resources:
                   - "cloudformation:ValidateTemplate"
                 Resource:
                   - !Sub "arn:${AWS::Partition}:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/${AWS::StackName}/*"
+                  - !Sub "arn:${AWS::Partition}:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/${TestingStackName}/*"
 
   # PipelineStackCloudFormationExecutionRole is used for the pipeline to self mutate
   PipelineStackCloudFormationExecutionRole:
