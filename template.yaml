@@ -58,17 +58,36 @@ Resources:
       Runtime: python3.11
       Architectures:
         - x86_64
-
+      Events:
+        ScheduleStart:
+          Type: ScheduleV2
+          Properties:
+            Name: !Sub AsgSchedulerStart_${Environment}
+            Description: Daily schedule to invoke AsgSchedulerFunction for starting dev ASGs
+            RoleArn: !GetAtt AsgSchedulerFunctionRole.Arn
+            ScheduleExpression: "cron(0 8 ? * MON-FRI *)"
+            ScheduleExpressionTimezone: "America/New_York"
+            RetryPolicy:
+              MaximumRetryAttempts: 5
+              MaximumEventAgeInSeconds: 900
+        ScheduleStop:
+          Type: ScheduleV2
+          Properties:
+            Name: !Sub AsgSchedulerStop_${Environment}
+            Description: Daily schedule to invoke AsgSchedulerFunction for stopping dev ASGs
+            RoleArn: !GetAtt AsgSchedulerFunctionRole.Arn
+            ScheduleExpression: "cron(0 18 ? * MON-FRI *)"
+            ScheduleExpressionTimezone: "America/New_York"
+            RetryPolicy:
+              MaximumRetryAttempts: 5
+              MaximumEventAgeInSeconds: 900
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
   # Find out more about other implicit resources you can reference within SAM
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
-  HelloWorldApi:
-    Description: "API Gateway endpoint URL for Prod stage for Hello World function"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
-  HelloWorldFunction:
-    Description: "Hello World Lambda Function ARN"
-    Value: !GetAtt HelloWorldFunction.Arn
-  HelloWorldFunctionIamRole:
+  AsgSchedulerFunction:
+    Description: "AsgScheduler Function ARN"
+    Value: !GetAtt AsgSchedulerFunction.Arn
+  AsgSchedulerFunctionRole:
     Description: "Implicit IAM Role created for Hello World function"
-    Value: !GetAtt HelloWorldFunctionRole.Arn
+    Value: !GetAtt AsgSchedulerFunctionRole.Arn
