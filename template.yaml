@@ -114,6 +114,28 @@ Resources:
       Subscription:
         - Endpoint: itadmin@polanerselections.com
           Protocol: email
+  AsgSchedulerAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub AsgSchedulerAlarm_${Environment}
+      AlarmDescription: Error alarm for AsgSchedulerFunction
+      AlarmActions:
+        - !Ref AsgSchedulerErrorTopic
+      Namespace: AWS/Lambda
+      MetricName: Errors
+      Dimensions:
+        - Name: FunctionName
+          Value: !Ref AsgSchedulerFunction
+      Statistic: Sum
+      ComparisonOperator: GreaterThanThreshold
+      Threshold: 0
+      Period: 60
+      EvaluationPeriods: 1
+  AsgSchedulerLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${AsgSchedulerFunction}
+      RetentionInDays: 7
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
   # Find out more about other implicit resources you can reference within SAM
