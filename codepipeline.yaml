@@ -47,7 +47,7 @@ Parameters:
     Default: "DEV"
   TestingPipelineExecutionRole:
     Type: String
-    Default: "arn:aws:iam::424371521123:role/aws-sam-cli-managed-prod-pipe-PipelineExecutionRole-ZhsYpsXeU52t"
+    Default: "arn:aws:iam::424371521123:role/aws-sam-cli-managed-dev-pipel-PipelineExecutionRole-iscM7MFQ9Hcs"
   TestingCloudFormationExecutionRole:
     Type: String
     Default: "arn:aws:iam::424371521123:role/aws-sam-cli-managed-prod--CloudFormationExecutionRo-py0Fd4Cwaqh3"
